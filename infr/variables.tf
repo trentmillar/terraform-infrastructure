@@ -4,7 +4,7 @@ variable "region" {
 }
 
 variable "vpc_cidr" {
-  default = "10.0.0.0/16"
+  default = "192.168.0.0/16"
   description = "VPC CIDR Block"
 }
 
