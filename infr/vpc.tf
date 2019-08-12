@@ -79,3 +79,23 @@ resource "aws_subnet" "private-subnet-3" {
   }
 }
 // End - Private Subnets
+
+// Begin - Public Route Table
+resource "aws_route_table" "public-route-table" {
+  vpc_id = "${aws_vpc.testing-vpc.id}"
+
+  tags {
+      Name = "Public-Route-Table"
+  }
+}
+// End - Public Route Table
+
+// Begin - Private Route Table
+resource "aws_route_table" "private-route-table" {
+  vpc_id = "${aws_vpc.testing-vpc.id}"
+
+  tags {
+      Name = "Private-Route-Table"
+  }
+}
+// End - Private Route Table
