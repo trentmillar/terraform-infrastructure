@@ -133,3 +133,55 @@ resource "aws_route_table_association" "private-route-table-3-association" {
   subnet_id         = "${aws_subnet.private-subnet-3.id}"
 }
 // End - Private Route Table Associations
+
+// Begin - Assign Elastic IPs
+resource "aws_eip" "elastic-ip-for-nat-gw" {
+  vpc                       = true
+  associate_with_private_ip = "192.168.0.5"
+
+  tags {
+      Name  = "Testing-EIP"
+  }
+}
+// End - Assign Elastic IPs
+
+// Begin - Create NAT GW
+resource "aws_nat_gateway" "nat-gw" {
+  allocation_id = "${aws_eip.elastic-ip-for-nat-gw.id}"
+  subnet_id     = "${aws_subnet.public-subnet-1.id}"
+
+  tags {
+      Name  = "Tesing-NAT-DW"
+  }
+
+  depends_on    = ["aws_eip.elastic-ip-for-nat-gw"]
+}
+// End - Create NAT GW
+
+// Begin - Associate Private Route Table to NAT GW
+
+// 0.0.0.0/0 allows our server to access external ips
+resource "aws_route" "nat-gw-route" {
+  route_table_id            = "${aws_route_table.private-route-table.id}"
+  nat_gateway_id            = "${aws_nat_gateway.nat-gw.id}"
+  destination_cidr_block    = "0.0.0.0/0}"
+}
+// End - Associate Private Route Table to NAT GW
+
+// Begin - Create Internet GW
+resource "aws_internet_gateway" "testing-igw" {
+    vpc_id  = "${aws_vpc.testing-vpc.id}"
+
+    tags {
+        Name = "Testing-IGW"
+    }
+}
+// End - Create Internet GW
+
+// Begin - Associate Public Route Table to Internet GW
+resource "aws_route" "public-internet-gw-route" {
+  route_table_id            = "${aws_route_table.public-route-table.id}"
+  gateway_id                = "${aws_internet_gateway.testing-igw.id}"
+  destination_cidr_block    = "0.0.0.0/0"
+}
+// End - Associate Public Route Table to Internet GW
