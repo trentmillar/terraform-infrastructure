@@ -1,5 +1,5 @@
 provider "aws" {
-  region    = "${var.region}"
+  region = "${var.region}"
 }
 
 terraform {
@@ -10,9 +10,8 @@ terraform {
 resource "aws_vpc" "testing-vpc" {
   cidr_block            = "${var.vpc_cidr}"
   enable_dns_hostnames  = true
-
-  tags {
-      Name  = "Test-VPC"
+  tags = {
+      Name = "Test-VPC"
   }
 }
 
@@ -21,9 +20,8 @@ resource "aws_subnet" "public-subnet-1" {
   cidr_block        = "${var.public_subnet_1_cidr}"
   vpc_id            = "${aws_vpc.testing-vpc.id}"
   availability_zone = "us-west-2a"
-
-  tags {
-      Name  = "Public-Subnet-1"
+  tags = {
+      Name = "Public-Subnet-1"
   }
 }
 
@@ -31,9 +29,8 @@ resource "aws_subnet" "public-subnet-2" {
   cidr_block        = "${var.public_subnet_2_cidr}"
   vpc_id            = "${aws_vpc.testing-vpc.id}"
   availability_zone = "us-west-2b"
-
-  tags {
-      Name  = "Public-Subnet-2"
+  tags = {
+      Name = "Public-Subnet-2"
   }
 }
 
@@ -41,9 +38,8 @@ resource "aws_subnet" "public-subnet-3" {
   cidr_block        = "${var.public_subnet_3_cidr}"
   vpc_id            = "${aws_vpc.testing-vpc.id}"
   availability_zone = "us-west-2c"
-
-  tags {
-      Name  = "Public-Subnet-3"
+  tags = {
+      Name = "Public-Subnet-3"
   }
 }
 // End - Public Subnets
@@ -53,9 +49,8 @@ resource "aws_subnet" "private-subnet-1" {
   cidr_block        = "${var.private_subnet_1_cidr}"
   vpc_id            = "${aws_vpc.testing-vpc.id}"
   availability_zone = "us-west-2a"
-
-  tags {
-      Name  = "Private-Subnet-1"
+  tags = {
+      Name = "Private-Subnet-1"
   }
 }
 
@@ -63,9 +58,8 @@ resource "aws_subnet" "private-subnet-2" {
   cidr_block        = "${var.private_subnet_2_cidr}"
   vpc_id            = "${aws_vpc.testing-vpc.id}"
   availability_zone = "us-west-2b"
-
-  tags {
-      Name  = "Private-Subnet-2"
+  tags = {
+      Name = "Private-Subnet-2"
   }
 }
 
@@ -73,29 +67,26 @@ resource "aws_subnet" "private-subnet-3" {
   cidr_block        = "${var.private_subnet_3_cidr}"
   vpc_id            = "${aws_vpc.testing-vpc.id}"
   availability_zone = "us-west-2c"
-
-  tags {
-      Name  = "Private-Subnet-3"
+  tags = {
+      Name = "Private-Subnet-3"
   }
 }
 // End - Private Subnets
 
 // Begin - Public Route Table
 resource "aws_route_table" "public-route-table" {
-  vpc_id    = "${aws_vpc.testing-vpc.id}"
-
-  tags {
-      Name  = "Public-Route-Table"
+  vpc_id = "${aws_vpc.testing-vpc.id}"
+  tags = {
+      Name = "Public-Route-Table"
   }
 }
 // End - Public Route Table
 
 // Begin - Private Route Table
 resource "aws_route_table" "private-route-table" {
-  vpc_id    = "${aws_vpc.testing-vpc.id}"
-
-  tags {
-      Name  = "Private-Route-Table"
+  vpc_id = "${aws_vpc.testing-vpc.id}"
+  tags = {
+      Name = "Private-Route-Table"
   }
 }
 // End - Private Route Table
@@ -138,9 +129,8 @@ resource "aws_route_table_association" "private-route-table-3-association" {
 resource "aws_eip" "elastic-ip-for-nat-gw" {
   vpc                       = true
   associate_with_private_ip = "192.168.0.5"
-
-  tags {
-      Name  = "Testing-EIP"
+  tags = {
+      Name = "Testing-EIP"
   }
 }
 // End - Assign Elastic IPs
@@ -149,9 +139,8 @@ resource "aws_eip" "elastic-ip-for-nat-gw" {
 resource "aws_nat_gateway" "nat-gw" {
   allocation_id = "${aws_eip.elastic-ip-for-nat-gw.id}"
   subnet_id     = "${aws_subnet.public-subnet-1.id}"
-
-  tags {
-      Name  = "Tesing-NAT-DW"
+  tags = {
+      Name = "Tesing-NAT-DW"
   }
 
   depends_on    = ["aws_eip.elastic-ip-for-nat-gw"]
@@ -170,9 +159,8 @@ resource "aws_route" "nat-gw-route" {
 
 // Begin - Create Internet GW
 resource "aws_internet_gateway" "testing-igw" {
-    vpc_id  = "${aws_vpc.testing-vpc.id}"
-
-    tags {
+    vpc_id = "${aws_vpc.testing-vpc.id}"
+    tags = {
         Name = "Testing-IGW"
     }
 }
