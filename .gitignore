@@ -1,2 +1,5 @@
 # ignore pem/keys
 **/*.pem
+
+# ignore init output
+**/.terraform
