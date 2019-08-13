@@ -90,3 +90,24 @@ resource "aws_security_group" "elb_security_group" {
       cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_iam_role" "ec2_iam_role" {
+  name = "EC2-IAM-ROLE"
+  assume_role_policy = <<EOF
+{
+    Version: "2012-10-17",
+    Statement: [
+        {
+            Effect: "Allow",
+            Principal: {
+                Services: [
+                    "ec2.amazonaws.com",
+                    "application-autoscaling.amazonaws.com"
+                ]
+            },
+            Action: "sts:AssumeRole"
+        }
+    ]
+}
+  EOF
+}
