@@ -6,28 +6,46 @@ terraform {
     backend "s3" { }
 }
 
+locals {
+    kubernetes_prv_subnet_tags = "${map(
+        "${var.kubernetes_cluster_key}",
+        "${var.kubernetes_cluster_value}",
+        "${var.kubernetes_elb_internal_key}",
+        "${var.kubernetes_elb_internal_value}"
+    )}"
+    kubernetes_pub_subnet_tags = "${map(
+        "${var.kubernetes_cluster_key}",
+        "${var.kubernetes_cluster_value}",
+        "${var.kubernetes_elb_key}",
+        "${var.kubernetes_elb_value}"
+    )}"
+}
+
 // Define our single VPC for our subnets
-resource "aws_vpc" "testing-vpc" {
+resource "aws_vpc" "cluster-vpc" {
   cidr_block            = "${var.vpc_cidr}"
   enable_dns_hostnames  = true
   tags = {
-      Name = "Test-VPC"
+      Name = "cluster1"
   }
 }
 
 // Begin - Public Subnets
 resource "aws_subnet" "public-subnet-1" {
   cidr_block        = "${var.public_subnet_1_cidr}"
-  vpc_id            = "${aws_vpc.testing-vpc.id}"
+  vpc_id            = "${aws_vpc.cluster-vpc.id}"
   availability_zone = "us-west-2a"
-  tags = {
-      Name = "Public-Subnet-1"
-  }
+  tags = "${merge(
+      local.kubernetes_prv_subnet_tags,
+      map(
+          Name, "Public-Subnet-1"
+      )
+  )}"
 }
 
 resource "aws_subnet" "public-subnet-2" {
   cidr_block        = "${var.public_subnet_2_cidr}"
-  vpc_id            = "${aws_vpc.testing-vpc.id}"
+  vpc_id            = "${aws_vpc.cluster-vpc.id}"
   availability_zone = "us-west-2b"
   tags = {
       Name = "Public-Subnet-2"
@@ -36,7 +54,7 @@ resource "aws_subnet" "public-subnet-2" {
 
 resource "aws_subnet" "public-subnet-3" {
   cidr_block        = "${var.public_subnet_3_cidr}"
-  vpc_id            = "${aws_vpc.testing-vpc.id}"
+  vpc_id            = "${aws_vpc.cluster-vpc.id}"
   availability_zone = "us-west-2c"
   tags = {
       Name = "Public-Subnet-3"
@@ -47,16 +65,19 @@ resource "aws_subnet" "public-subnet-3" {
 // Begin - Private Subnets
 resource "aws_subnet" "private-subnet-1" {
   cidr_block        = "${var.private_subnet_1_cidr}"
-  vpc_id            = "${aws_vpc.testing-vpc.id}"
+  vpc_id            = "${aws_vpc.cluster-vpc.id}"
   availability_zone = "us-west-2a"
-  tags = {
-      Name = "Private-Subnet-1"
-  }
+  tags = "${merge(
+      local.kubernetes_prv_subnet_tags,
+      map(
+          Name, "Private-Subnet-1"
+      )
+  )}"
 }
 
 resource "aws_subnet" "private-subnet-2" {
   cidr_block        = "${var.private_subnet_2_cidr}"
-  vpc_id            = "${aws_vpc.testing-vpc.id}"
+  vpc_id            = "${aws_vpc.cluster-vpc.id}"
   availability_zone = "us-west-2b"
   tags = {
       Name = "Private-Subnet-2"
@@ -65,7 +86,7 @@ resource "aws_subnet" "private-subnet-2" {
 
 resource "aws_subnet" "private-subnet-3" {
   cidr_block        = "${var.private_subnet_3_cidr}"
-  vpc_id            = "${aws_vpc.testing-vpc.id}"
+  vpc_id            = "${aws_vpc.cluster-vpc.id}"
   availability_zone = "us-west-2c"
   tags = {
       Name = "Private-Subnet-3"
@@ -75,7 +96,7 @@ resource "aws_subnet" "private-subnet-3" {
 
 // Begin - Public Route Table
 resource "aws_route_table" "public-route-table" {
-  vpc_id = "${aws_vpc.testing-vpc.id}"
+  vpc_id = "${aws_vpc.cluster-vpc.id}"
   tags = {
       Name = "Public-Route-Table"
   }
@@ -84,7 +105,7 @@ resource "aws_route_table" "public-route-table" {
 
 // Begin - Private Route Table
 resource "aws_route_table" "private-route-table" {
-  vpc_id = "${aws_vpc.testing-vpc.id}"
+  vpc_id = "${aws_vpc.cluster-vpc.id}"
   tags = {
       Name = "Private-Route-Table"
   }
@@ -159,7 +180,7 @@ resource "aws_route" "nat-gw-route" {
 
 // Begin - Create Internet GW
 resource "aws_internet_gateway" "testing-igw" {
-    vpc_id = "${aws_vpc.testing-vpc.id}"
+    vpc_id = "${aws_vpc.cluster-vpc.id}"
     tags = {
         Name = "Testing-IGW"
     }

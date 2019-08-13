@@ -1,9 +1,9 @@
 output "vpc_id" {
-  value = "${aws_vpc.testing-vpc.id}"
+  value = "${aws_vpc.cluster-vpc.id}"
 }
 
 output "vpc_cidr_block" {
-  value = "${aws_vpc.testing-vpc.cidr_block}"
+  value = "${aws_vpc.cluster-vpc.cidr_block}"
 }
 
 output "public_subnet_1_id" {
