@@ -55,9 +55,3 @@ variable "kubernetes_elb_key" {
 variable "kubernetes_elb_value" {
     description = "Value used by kubernetes"
 }
-
-variable "general_ami_id" {
-  description = "Ubuntu 18.04 LTS"
-  default = "ami-05c1fa8df71875112"
-}
-

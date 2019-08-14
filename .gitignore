@@ -1,3 +1,6 @@
+# ignore my creds file
+**/*.csv
+
 # ignore pem/keys
 **/*.pem
 

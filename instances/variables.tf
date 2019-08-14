@@ -30,3 +30,8 @@ variable "min_instance_size" {
 variable "autoscaling_sns_sms_endpoint" {
   description = "Number to send message to"
 }
+
+variable "general_ami_id" {
+  description = "Ubuntu 18.04 LTS"
+  default = "ami-05c1fa8df71875112"
+}
