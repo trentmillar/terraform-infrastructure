@@ -208,6 +208,7 @@ resource "aws_elb" "webapp_load_balancer" {
   }
 }
 
+// Begin - Backend/Private ELB w/ all private subnets & generic listener
 resource "aws_elb" "backend_load_balancer" {
   name            = "Schedule-Private-LoadBalance"
   internal        = true
@@ -233,3 +234,60 @@ resource "aws_elb" "backend_load_balancer" {
       unhealthy_threshold = 5
   }
 }
+// End - Backend/Private ELB w/ all private subnets & generic listener
+
+// Begin - Autoscaling group for private EC2 instances
+resource "aws_autoscaling_group" "ec2_private_autoscaling_group" {
+    name                 = "Scheduler-Private-AutoScalingGroup"
+    vpc_zone_identifier  = [
+      "${data.terraform_remote_state.network_configuration.private_subnet_1_id}",
+      "${data.terraform_remote_state.network_configuration.private_subnet_2_id}",
+      "${data.terraform_remote_state.network_configuration.private_subnet_3_id}",
+    ]
+    max_size             = "${var.max_instance_size}"
+    min_size             = "${var.min_instance_size}"
+    launch_configuration = "${aws_launch_configuration.ec2_private_launch_configuation.name}"
+    health_check_type    = "ELB"
+    load_balancers       = ["${aws_elb.backend_load_balancer.name}"]
+
+    tag {
+        key                 ="Name"
+        propagate_at_launch = false
+        value               = "Backend-EC2-Instance"
+    }
+
+    tag {
+        key                 = "Type"
+        propagate_at_launch = false
+        value               = "Scheduler"
+    }
+}
+// End - Autoscaling group for private EC2 instances
+
+// Begin - Autoscaling group for public EC2 instances
+resource "aws_autoscaling_group" "ec2_public_autoscaling_group" {
+    name                 = "Scheduler-Public-AutoScalingGroup"
+    vpc_zone_identifier  = [
+      "${data.terraform_remote_state.network_configuration.public_subnet_1_id}",
+      "${data.terraform_remote_state.network_configuration.public_subnet_2_id}",
+      "${data.terraform_remote_state.network_configuration.public_subnet_3_id}",
+    ]
+    max_size             = "${var.max_instance_size}"
+    min_size             = "${var.min_instance_size}"
+    launch_configuration = "${aws_launch_configuration.ec2_public_launch_configuration.name}"
+    health_check_type    = "ELB"
+    load_balancers       = ["${aws_elb.webapp_load_balancer.name}"]
+
+    tag {
+        key                 ="Name"
+        propagate_at_launch = false
+        value               = "Frontend-EC2-Instance"
+    }
+
+    tag {
+        key                 = "Type"
+        propagate_at_launch = false
+        value               = "Scheduler"
+    }
+}
+// End - Autoscaling group for public EC2 instances

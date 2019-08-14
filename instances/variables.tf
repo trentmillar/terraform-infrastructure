@@ -19,3 +19,10 @@ variable "keypair_name" {
   default = "scheduler"
 }
 
+variable "max_instance_size" {
+  description = "Max instances to launch"
+}
+
+variable "min_instance_size" {
+  description = "Min instances to launch"
+}
