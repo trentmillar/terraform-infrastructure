@@ -31,7 +31,9 @@ resource "aws_security_group" "ec2_public_security_group" {
         from_port = 22
         protocol = "TCP"
         to_port = 22
-        cidr_blocks = [""]
+        //todo, private subnet cidr, not hard-coded.
+        // cidr_blocks = ["0.0.0.0/0"]
+        security_groups = ["${aws_security_group.ec2_private_security_group.id}"]
     }
 
     egress {
@@ -51,7 +53,7 @@ resource "aws_security_group" "ec2_private_security_group" {
       from_port = 0
       protocol = "-1"
       to_port = 0
-      cidr_blocks = ["${aws_security_group.ec2_public_security_group.id}"]
+      security_groups = ["${aws_security_group.ec2_public_security_group.id}"]
   }
 
   ingress {
@@ -149,7 +151,7 @@ data "aws_ami" "launch_configuration_ami" {
 }
 
 resource "aws_launch_configuration" "ec2_private_launch_configuation" {
-  image_id                    = "${data.aws_ami.launch_configuration_ami.id}"
+  image_id                    = "${var.general_ami_id}"//"${data.aws_ami.launch_configuration_ami.id}"
   instance_type               = "${var.ec2_instance_type}"
   key_name                    = "${var.keypair_name}"
   associate_public_ip_address = false
@@ -166,7 +168,7 @@ resource "aws_launch_configuration" "ec2_private_launch_configuation" {
 }
 
 resource "aws_launch_configuration" "ec2_public_launch_configuration" {
-    image_id                    = "${data.aws_ami.launch_configuration_ami.id}"
+    image_id                    = "${var.general_ami_id}"//"${data.aws_ami.launch_configuration_ami.id}"
     instance_type               = "${var.ec2_instance_type}"
     key_name                    = "${var.keypair_name}"
     associate_public_ip_address = true
@@ -352,3 +354,4 @@ resource "aws_autoscaling_notification" "scheduler_autoscaling_notification" {
   topic_arn = "${aws_sns_topic.scheduler_frontend_autoscaling_alert_topic.arn}"
 }
 // End - Autoscaling notification, specify resources to send
+
