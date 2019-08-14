@@ -324,3 +324,24 @@ resource "aws_autoscaling_policy" "public_scaling_policy" {
 }
 // End - handle actual instance scaling - Private
 
+// Begin - SNS topic for when autoscaling happens (Frontend)
+resource "aws_sns_topic" "scheduler_frontend_autoscaling_alert_topic" {
+  name         = "Scheduler-Frontend-AS-Topic"
+  display_name = "Scheduler Topic - Frontend"
+}
+// End - SNS topic for when autoscaling happens (Frontend)
+
+// Begin - SNS Subscription for autoscaling topic
+resource "aws_sns_topic_subscription" "scheduler_frontend_autoscaling_sms_subscription" {
+  endpoint = "TODO"
+  protocol = "sms"
+  topic_arn = "${aws_sns_topic.scheduler_frontend_autoscaling_alert_topic.arn}"
+}
+// End - SNS Subscription for autoscaling topic
+
+// Begin - SNS topic for when autoscaling happens (Backend)
+resource "aws_sns_topic" "scheduler_backend_autoscaling_alert_topic" {
+  name         = "Scheduler-Backend-AS-Topic"
+  display_name = "Scheduler Topic - Backend"
+}
+// End - SNS topic for when autoscaling happens (Backend)
