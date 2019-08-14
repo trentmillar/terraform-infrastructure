@@ -26,3 +26,7 @@ variable "max_instance_size" {
 variable "min_instance_size" {
   description = "Min instances to launch"
 }
+
+variable "autoscaling_sns_sms_endpoint" {
+  description = "Number to send message to"
+}

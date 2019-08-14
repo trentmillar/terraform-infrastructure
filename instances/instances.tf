@@ -333,15 +333,22 @@ resource "aws_sns_topic" "scheduler_frontend_autoscaling_alert_topic" {
 
 // Begin - SNS Subscription for autoscaling topic
 resource "aws_sns_topic_subscription" "scheduler_frontend_autoscaling_sms_subscription" {
-  endpoint = "TODO"
+  endpoint = "${var.autoscaling_sns_sms_endpoint}"
   protocol = "sms"
   topic_arn = "${aws_sns_topic.scheduler_frontend_autoscaling_alert_topic.arn}"
 }
 // End - SNS Subscription for autoscaling topic
 
-// Begin - SNS topic for when autoscaling happens (Backend)
-resource "aws_sns_topic" "scheduler_backend_autoscaling_alert_topic" {
-  name         = "Scheduler-Backend-AS-Topic"
-  display_name = "Scheduler Topic - Backend"
+// Begin - Autoscaling notification, specify resources to send
+resource "aws_autoscaling_notification" "scheduler_autoscaling_notification" {
+  group_names = [
+      "${aws_autoscaling_group.ec2_public_autoscaling_group.name}"
+  ]
+  notifications = [
+      "autoscaling:EC2_INSTANCE_LAUNCH",
+      "autoscaling:EC2_INSTANCE_TERMINATE",
+      "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+  ]
+  topic_arn = "${aws_sns_topic.scheduler_frontend_autoscaling_alert_topic.arn}"
 }
-// End - SNS topic for when autoscaling happens (Backend)
+// End - Autoscaling notification, specify resources to send
