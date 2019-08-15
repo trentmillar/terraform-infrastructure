@@ -1,6 +1,6 @@
 provider "aws" {
   region = "${var.region}"
-  profile = "${var.aws_profile}"
+  //profile = "${var.aws_profile}"
 }
 
 terraform {
@@ -27,7 +27,7 @@ resource "aws_vpc" "cluster_vpc" {
   cidr_block            = "${var.vpc_cidr}"
   enable_dns_hostnames  = true
   tags = {
-      Name = "cluster1"
+      Name = "VPC-Kube"
   }
 }
 
@@ -36,12 +36,15 @@ resource "aws_subnet" "public_subnet_1" {
   cidr_block        = "${var.public_subnet_1_cidr}"
   vpc_id            = "${aws_vpc.cluster_vpc.id}"
   availability_zone = "us-west-2a"
-  tags = "${merge(
+  tags = {
+    Name = "Public-Subnet-1"
+  }
+  /* tags = "${merge(
       local.kubernetes_prv_subnet_tags,
       map(
           Name, "public_subnet_1"
       )
-  )}"
+  )}" */
 }
 
 resource "aws_subnet" "public_subnet_2" {
@@ -49,7 +52,7 @@ resource "aws_subnet" "public_subnet_2" {
   vpc_id            = "${aws_vpc.cluster_vpc.id}"
   availability_zone = "us-west-2b"
   tags = {
-      Name = "public_subnet_2"
+      Name = "Public-Subnet-2"
   }
 }
 
@@ -58,7 +61,7 @@ resource "aws_subnet" "public_subnet_3" {
   vpc_id            = "${aws_vpc.cluster_vpc.id}"
   availability_zone = "us-west-2c"
   tags = {
-      Name = "public_subnet_3"
+      Name = "Public-Subnet-3"
   }
 }
 // End - Public Subnets
@@ -68,12 +71,15 @@ resource "aws_subnet" "private_subnet_1" {
   cidr_block        = "${var.private_subnet_1_cidr}"
   vpc_id            = "${aws_vpc.cluster_vpc.id}"
   availability_zone = "us-west-2a"
-  tags = "${merge(
+  tags = {
+    Name = "Private-Subnet-1"
+  }
+  /* tags = "${merge(
       local.kubernetes_prv_subnet_tags,
       map(
           Name, "private_subnet_1"
       )
-  )}"
+  )}" */
 }
 
 resource "aws_subnet" "private_subnet_2" {
@@ -81,7 +87,7 @@ resource "aws_subnet" "private_subnet_2" {
   vpc_id            = "${aws_vpc.cluster_vpc.id}"
   availability_zone = "us-west-2b"
   tags = {
-      Name = "private_subnet_2"
+      Name = "Private-Subnet-2"
   }
 }
 
@@ -90,7 +96,7 @@ resource "aws_subnet" "private_subnet_3" {
   vpc_id            = "${aws_vpc.cluster_vpc.id}"
   availability_zone = "us-west-2c"
   tags = {
-      Name = "private_subnet_3"
+      Name = "Private-Subnet-3"
   }
 }
 // End - Private Subnets
@@ -99,7 +105,7 @@ resource "aws_subnet" "private_subnet_3" {
 resource "aws_route_table" "public_route_table" {
   vpc_id = "${aws_vpc.cluster_vpc.id}"
   tags = {
-      Name = "public_route_table"
+      Name = "Public-Route-Table"
   }
 }
 // End - Public Route Table
@@ -108,7 +114,7 @@ resource "aws_route_table" "public_route_table" {
 resource "aws_route_table" "private_route_table" {
   vpc_id = "${aws_vpc.cluster_vpc.id}"
   tags = {
-      Name = "private_route_table"
+      Name = "Private-Route-Table"
   }
 }
 // End - Private Route Table
