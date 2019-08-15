@@ -55,3 +55,7 @@ variable "kubernetes_elb_key" {
 variable "kubernetes_elb_value" {
     description = "Value used by kubernetes"
 }
+
+variable "aws_profile" {
+  description = "profile stanza to use from credentials file"
+}
