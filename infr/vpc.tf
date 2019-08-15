@@ -38,6 +38,8 @@ resource "aws_subnet" "public_subnet_1" {
   availability_zone = "us-west-2a"
   tags = {
     Name = "Public-Subnet-1"
+    "${var.kubernetes_cluster_key}" = "${var.kubernetes_cluster_value}"
+    "${var.kubernetes_elb_key}" = "${var.kubernetes_elb_value}"
   }
   /* tags = "${merge(
       local.kubernetes_prv_subnet_tags,
