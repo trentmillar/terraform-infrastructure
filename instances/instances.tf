@@ -208,13 +208,13 @@ resource "aws_elb" "webapp_load_balancer" {
       lb_protocol       = "HTTP"
   }
 
-  health_check {
+  /* health_check {
       healthy_threshold   = 5
       interval            = 30
       target              = "HTTP:80/index.html"
       timeout             = 10
       unhealthy_threshold = 5
-  }
+  } */
 }
 
 // Begin - Backend/Private ELB w/ all private subnets & generic listener
@@ -235,13 +235,13 @@ resource "aws_elb" "backend_load_balancer" {
       lb_protocol       = "HTTP"
   }
 
-    health_check {
+    /* health_check {
       healthy_threshold   = 5
       interval            = 30
       target              = "HTTP:80/index.html"
       timeout             = 10
       unhealthy_threshold = 5
-  }
+  } */
 }
 // End - Backend/Private ELB w/ all private subnets & generic listener
 
