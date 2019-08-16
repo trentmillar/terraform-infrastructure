@@ -169,6 +169,7 @@ resource "aws_launch_configuration" "ec2_private_launch_configuation" {
     #!/bin/bash
     sudo apt-get update
     sudo apt-get install apache2
+    sudo ufw allow 'Apache'
     export INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
     echo "<html><body><h1>Running $INSTANCE_ID</h1></body></html>" > /var/www/html/index.html
   EOF
@@ -186,6 +187,7 @@ resource "aws_launch_configuration" "ec2_public_launch_configuration" {
     #!/bin/bash
     sudo apt-get update
     sudo apt-get install apache2
+    sudo ufw allow 'Apache'
     export INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id)
     echo "<html><body><h1>Running $INSTANCE_ID</h1></body></html>" > /var/www/html/index.html
   EOF
@@ -256,7 +258,7 @@ resource "aws_autoscaling_group" "ec2_private_autoscaling_group" {
     max_size             = "${var.max_instance_size}"
     min_size             = "${var.min_instance_size}"
     launch_configuration = "${aws_launch_configuration.ec2_private_launch_configuation.name}"
-    health_check_type    = "ELB"
+    //health_check_type    = "ELB"
     load_balancers       = ["${aws_elb.backend_load_balancer.name}"]
 
     tag {
@@ -284,7 +286,7 @@ resource "aws_autoscaling_group" "ec2_public_autoscaling_group" {
     max_size             = "${var.max_instance_size}"
     min_size             = "${var.min_instance_size}"
     launch_configuration = "${aws_launch_configuration.ec2_public_launch_configuration.name}"
-    health_check_type    = "ELB"
+    //health_check_type    = "ELB"
     load_balancers       = ["${aws_elb.webapp_load_balancer.name}"]
 
     tag {
@@ -300,7 +302,7 @@ resource "aws_autoscaling_group" "ec2_public_autoscaling_group" {
     }
 }
 // End - Autoscaling group for public EC2 instances
-
+/*
 // Begin - handle actual instance scaling - Public
 resource "aws_autoscaling_policy" "public_scaling_policy" {
   autoscaling_group_name   = "${aws_autoscaling_group.ec2_public_autoscaling_group.name}"
@@ -345,4 +347,4 @@ resource "aws_autoscaling_notification" "scheduler_autoscaling_notification" {
   topic_arn = "${aws_sns_topic.scheduler_frontend_autoscaling_alert_topic.arn}"
 }
 // End - Autoscaling notification, specify resources to send
-
+*/

@@ -41,12 +41,6 @@ resource "aws_subnet" "public_subnet_1" {
     "${var.kubernetes_cluster_key}" = "${var.kubernetes_cluster_value}"
     "${var.kubernetes_elb_key}" = "${var.kubernetes_elb_value}"
   }
-  /* tags = "${merge(
-      local.kubernetes_prv_subnet_tags,
-      map(
-          Name, "public_subnet_1"
-      )
-  )}" */
 }
 
 resource "aws_subnet" "public_subnet_2" {
