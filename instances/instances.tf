@@ -312,7 +312,7 @@ resource "aws_autoscaling_policy" "public_scaling_policy" {
       predefined_metric_specification {
           predefined_metric_type = "ASGAverageCPUUtilization"
       }
-      target_value = 60
+      target_value = 80
   }
 }
 // End - handle actual instance scaling - Public
