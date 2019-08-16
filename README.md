@@ -40,11 +40,11 @@ Has a NAT Gateway to the “private route table” to access the internal load b
 After the earlier step of creating a new user, you should have both the access & secret keys.
 To configure AWS locally to use this new user you need to use the aws cli's configure command.
 
-`aws configure` (press return)
-`$ AWS Access Key ID [None]:` (YOUR ACCESS KEY)
-`$ AWS Secret Access Key ID [None]:` (YOUR SECRET KEY)
-`$ Default region name [None]:` (NONE/ANY REGION)
-`$ Default output format [None]:` <json/text/table>
+- `aws configure` (press return)
+  - `$ AWS Access Key ID [None]:` (YOUR ACCESS KEY)
+  - `$ AWS Secret Access Key ID [None]:` (YOUR SECRET KEY)
+  - `$ Default region name [None]:` (NONE/ANY REGION)
+  - `$ Default output format [None]:` (json/text/table)
 
 4. (optional) Configure multiple AWS profiles
 If you have running the configure command already and already have an AWS profile configured, this will walk through having multiple profiles.
