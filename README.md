@@ -29,8 +29,8 @@ Has a NAT Gateway to the “private route table” to access the internal load b
     - Click through the remaining steps until you successfully create the user.
     - Download the .csv to capture the user's Access & Secret key. DONT LOSE
       - user: scheduler-deployer
-      - access key: <YOUR KEY>
-      - secret key: <YOUR SECRET>
+      - access key: (YOUR KEY)
+      - secret key: (YOUR SECRET)
 
 2. Install dependencies (MAC)
     - `brew install terraform` > 0.12.6
@@ -41,9 +41,9 @@ After the earlier step of creating a new user, you should have both the access &
 To configure AWS locally to use this new user you need to use the aws cli's configure command.
 
 `aws configure` (press return)
-`$ AWS Access Key ID [None]:` <YOUR ACCESS KEY>
-`$ AWS Secret Access Key ID [None]:` <YOUR SECRET KEY>
-`$ Default region name [None]:` <NONE/ANY REGION>
+`$ AWS Access Key ID [None]:` (YOUR ACCESS KEY)
+`$ AWS Secret Access Key ID [None]:` (YOUR SECRET KEY)
+`$ Default region name [None]:` (NONE/ANY REGION)
 `$ Default output format [None]:` <json/text/table>
 
 4. (optional) Configure multiple AWS profiles
