@@ -302,7 +302,10 @@ resource "aws_autoscaling_group" "ec2_public_autoscaling_group" {
     }
 }
 // End - Autoscaling group for public EC2 instances
-/*
+
+
+/* UNCOMMENT TO USE SNS -> SMS when auto scaling is executed
+
 // Begin - handle actual instance scaling - Public
 resource "aws_autoscaling_policy" "public_scaling_policy" {
   autoscaling_group_name   = "${aws_autoscaling_group.ec2_public_autoscaling_group.name}"
