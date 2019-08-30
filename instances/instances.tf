@@ -351,3 +351,11 @@ resource "aws_autoscaling_notification" "scheduler_autoscaling_notification" {
 }
 // End - Autoscaling notification, specify resources to send
 */
+
+
+/* 
+  Outputs
+*/
+output "public_ip" {
+  value = "${aws_launch_configuration.ec2_public_launch_configuration.public_ip}"
+}

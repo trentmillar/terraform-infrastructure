@@ -197,3 +197,10 @@ resource "aws_route" "public_internet_gw_route" {
   destination_cidr_block    = "0.0.0.0/0"
 }
 // End - Associate Public Route Table to Internet GW
+
+/* 
+  Outputs
+*/
+output "public_ip" {
+  value = "${aws_eip.elastic_ip_for_nat_gw.public_ip}"
+}
